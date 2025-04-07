@@ -28,7 +28,14 @@ TIMEZONE = pytz.timezone('America/Sao_Paulo')  # Brazil timezone
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Send a message when the command /start is issued."""
     await update.message.reply_text(
-        'Hi! I am your reminder bot. Use /r or /reminder followed by your reminder message to set a reminder.'
+        'Hi! I am your reminder bot. Use /r or /reminder followed by your reminder message to set a reminder.\n'
+        'Example:\n /r Buy groceries\n\n'
+        'Then you will be asked to provide the time you want to be reminded.\n\n'
+        'You can use the following formats: \n'
+        '- HH:MM (for today)\n'
+        '- HH:MM DD/MM (for a specific day this year)\n'
+        '- HH:MM DD/MM/YYYY (for a specific date)\n'
+        'Example: 22:55, 22:55 07/04, or 22:55 07/04/2025'
     )
 
 async def reminder(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -44,7 +51,7 @@ async def reminder(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     current_time = datetime.now(TIMEZONE)
     await update.message.reply_text(
-        f'When would you like to be reminded? HH:MM or HH:MM dd/mm')
+        f'When would you like to be reminded?')
     return WAITING_FOR_TIME
 
 async def set_time(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -114,7 +121,8 @@ async def set_time(update: Update, context: ContextTypes.DEFAULT_TYPE):
         })
 
         await update.message.reply_text(
-            f'Reminder set at {target_datetime.strftime("%H:%M %d/%m/")}:\n "{context.user_data["reminder_message"]}"'
+            f'Reminder set at {target_datetime.strftime("%H:%M %d/%m")}:\n'
+            f'{context.user_data["reminder_message"]}'
         )
         
         # Schedule the reminder
